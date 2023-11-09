@@ -1555,4 +1555,7 @@ footer .social-media {
     text-align: center;
     margin-top: 1rem;
   }
+  .btn {
+  padding: 1rem 1.75rem;
+  }
 }
