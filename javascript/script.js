@@ -239,6 +239,9 @@ const swiper = new Swiper(".swiper", {
     el: ".swiper-pagination",
     clickable: true,
   },
+  watchOverflow: true,
+  observer: true,
+  observeParents: true,
 });
 
 function activeLink() {
@@ -260,3 +263,45 @@ function activeLink() {
 }
 
 activeLink();
+
+const newsletterForm = document.querySelector(".newsletter-form");
+if (newsletterForm) {
+  newsletterForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const emailInput = newsletterForm.querySelector('input[name="email"]');
+    const submitBtn = newsletterForm.querySelector('input[type="submit"]');
+    const originalLabel = submitBtn?.value;
+    const endpoint = newsletterForm.getAttribute("action");
+
+    if (!endpoint || !emailInput) return;
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.value = "Subscribing…";
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: new FormData(newsletterForm),
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) throw new Error("Subscribe failed");
+
+      newsletterForm.reset();
+      emailInput.value = "";
+      if (submitBtn) submitBtn.value = "Subscribed";
+    } catch {
+      if (submitBtn) submitBtn.value = "Try again";
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        window.setTimeout(() => {
+          submitBtn.value = originalLabel || "Subscribe";
+        }, 2000);
+      }
+    }
+  });
+}

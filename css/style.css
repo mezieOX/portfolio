@@ -15,7 +15,7 @@
   --shadow-md: 0 20px 50px rgba(11, 19, 36, 0.1);
   --radius: 1rem;
   --radius-lg: 1.5rem;
-  --section-padding: clamp(4.5rem, 8vw, 7.5rem);
+  --section-padding: clamp(2.75rem, 5vw, 4.25rem);
   --header-h: 4.5rem;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --font-display: "Syne", sans-serif;
@@ -460,8 +460,8 @@ body.open .hamburger .bar:last-child {
 
 .showcase-area .container {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
   align-items: center;
   width: 100%;
 }
@@ -482,8 +482,9 @@ body.open .hamburger .bar:last-child {
 
 .showcase-image {
   position: relative;
-  aspect-ratio: 4 / 5;
-  max-height: min(70vh, 560px);
+  width: 100%;
+  height: min(88vh, 720px);
+  justify-self: stretch;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background:
@@ -504,10 +505,14 @@ body.open .hamburger .bar:last-child {
 }
 
 .showcase-image .person {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+  max-width: none;
   object-fit: cover;
   object-position: center top;
+  display: block;
 }
 
 .showcase-image .shape {
@@ -542,7 +547,7 @@ body.open .hamburger .bar:last-child {
 .about .container {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  gap: clamp(2.5rem, 5vw, 4.5rem);
+  gap: clamp(1.75rem, 4vw, 3rem);
   align-items: center;
 }
 
@@ -659,7 +664,7 @@ body.open .hamburger .bar:last-child {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1.25rem;
-  margin-top: 2.5rem;
+  margin-top: 1.75rem;
   position: relative;
   z-index: 1;
   justify-items: center;
@@ -768,7 +773,7 @@ body.open .hamburger .bar:last-child {
 /* —— Experience —— */
 .experience-header {
   max-width: 40rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .experience-header .text {
@@ -864,7 +869,7 @@ body.open .hamburger .bar:last-child {
 }
 
 .education {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 
 .education-grid {
@@ -925,6 +930,25 @@ a.edu-item:hover p {
   font-weight: 700;
 }
 
+.edu-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.edu-logo {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 0.25rem;
+}
+
+.edu-head h4 {
+  margin: 0;
+}
+
 .phone-link {
   display: inline-flex;
   margin-top: 0.75rem;
@@ -932,7 +956,7 @@ a.edu-item:hover p {
 .services .container {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
-  gap: clamp(2rem, 5vw, 4rem);
+  gap: clamp(1.5rem, 3.5vw, 2.75rem);
   align-items: start;
 }
 
@@ -940,8 +964,8 @@ a.edu-item:hover p {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  margin: 2rem 0;
-  padding: 1.5rem 0;
+  margin: 1.35rem 0;
+  padding: 1.15rem 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
@@ -1013,7 +1037,7 @@ a.edu-item:hover p {
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .portfolio-btns {
@@ -1222,6 +1246,7 @@ body.stopScrolling {
   grid-template-columns: 1.15fr 0.85fr;
   gap: 2.5rem;
   align-items: center;
+  min-width: 0;
 }
 
 .section-background {
@@ -1230,14 +1255,19 @@ body.stopScrolling {
 
 .swiper {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   background: var(--surface-elevated);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 2.5rem 0 2rem;
+  box-sizing: border-box;
 }
 
 .swiper-slide {
   padding: 0 2rem;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .swiper-slide .text {
@@ -1310,7 +1340,7 @@ body.stopScrolling {
 .contact .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(2rem, 4vw, 3.5rem);
+  gap: clamp(1.5rem, 3.5vw, 2.75rem);
   align-items: start;
 }
 
@@ -1469,7 +1499,7 @@ footer .text {
 
 .daily-tools-header {
   max-width: 40rem;
-  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
 }
 
 .daily-tools-header .text {
@@ -1609,7 +1639,7 @@ body.dark .tool-icon {
 
 .faq-header {
   max-width: 40rem;
-  margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
 }
 
 .faq-header .text {
