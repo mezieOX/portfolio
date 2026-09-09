@@ -15,12 +15,7 @@ const toggle_btn = document.querySelector(".toggle-btn");
 const hamburger = document.querySelector(".hamburger");
 const date = document.getElementById("date");
 
-// Career start year from CV (Junior Front-End Engineer, 2020)
-const CAREER_START_YEAR = 2020;
-const yearsOfExperience = Math.max(
-  1,
-  new Date().getFullYear() - CAREER_START_YEAR,
-);
+const yearsOfExperience = 6;
 
 document.querySelectorAll(".exp-years").forEach((el) => {
   el.textContent = yearsOfExperience;
@@ -29,14 +24,6 @@ document.querySelectorAll(".exp-years").forEach((el) => {
 const yearsCounter = document.querySelector(".years-counter");
 if (yearsCounter) {
   yearsCounter.dataset.target = String(yearsOfExperience);
-}
-
-const metaDescription = document.querySelector('meta[name="description"]');
-if (metaDescription) {
-  metaDescription.setAttribute(
-    "content",
-    `Ikemma Augustine Chimezie — Senior Front-End / Mobile Engineer with ${yearsOfExperience} years of experience building user-focused web and mobile apps with React, Next.js, and React Native.`,
-  );
 }
 
 date.innerText = new Date().getFullYear();
@@ -120,39 +107,68 @@ window.addEventListener("scroll", () => {
 });
 
 function stickyNavbar() {
-  header.classList.toggle("scrolled", window.pageYOffset > 0);
+  header.classList.toggle("scrolled", window.scrollY > 24);
 }
 
 stickyNavbar();
-window.addEventListener("scroll", stickyNavbar);
+window.addEventListener("scroll", stickyNavbar, { passive: true });
 
-let sr = ScrollReveal({
-  duration: 900,
-  distance: "32px",
-  easing: "cubic-bezier(0.22, 1, 0.36, 1)",
-  reset: false,
-  viewFactor: 0.15,
-});
+let sr = null;
 
-sr.reveal(".showcase-info", { delay: 80 });
-sr.reveal(".showcase-image", {
-  origin: "bottom",
-  delay: 160,
-  afterReveal: (el) => el.classList.add("is-floating"),
+if (window.innerWidth > 768) {
+  sr = ScrollReveal({
+    duration: 900,
+    distance: "32px",
+    easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+    reset: false,
+    viewFactor: 0.15,
+  });
+
+  sr.reveal(".showcase-info", { delay: 80 });
+  sr.reveal(".showcase-image", {
+    origin: "bottom",
+    delay: 160,
+    afterReveal: (el) => el.classList.add("is-floating"),
+  });
+  sr.reveal(".about-card", { interval: 80 });
+  sr.reveal(".about-info", { delay: 100 });
+  sr.reveal(".skill-box", { delay: 80 });
+  sr.reveal(".skill-tags li", { interval: 40 });
+  sr.reveal(".exp-item", { interval: 100 });
+  sr.reveal(".edu-item", { interval: 80 });
+  sr.reveal(".services-info", { origin: "left" });
+  sr.reveal(".srv-card", { interval: 80 });
+  sr.reveal(".prt-card", { interval: 60 });
+  sr.reveal(".testimonials-title", { delay: 80 });
+  sr.reveal(".daily-tools-header", { delay: 80 });
+  sr.reveal(".tools-marquee", { delay: 120, distance: "24px" });
+  sr.reveal(".faq-header", { delay: 80 });
+  sr.reveal(".faq-item", { interval: 60 });
+  sr.reveal(".contact-info", { origin: "left" });
+  sr.reveal(".contact-form", { origin: "right", delay: 80 });
+  sr.reveal(".sub-box", { delay: 80 });
+} else {
+  document.querySelector(".showcase-image")?.classList.add("is-floating");
+}
+
+/* Infinite tools marquee: clone list for seamless loop */
+const toolsTrack = document.querySelector(".tools-track");
+const toolsList = document.querySelector(".tools-list");
+if (toolsTrack && toolsList) {
+  const clone = toolsList.cloneNode(true);
+  clone.setAttribute("aria-hidden", "true");
+  toolsTrack.appendChild(clone);
+}
+
+/* FAQ: keep only one item open at a time */
+document.querySelectorAll(".faq-item").forEach((item) => {
+  item.addEventListener("toggle", () => {
+    if (!item.open) return;
+    document.querySelectorAll(".faq-item").forEach((other) => {
+      if (other !== item) other.open = false;
+    });
+  });
 });
-sr.reveal(".about-card", { interval: 80 });
-sr.reveal(".about-info", { delay: 100 });
-sr.reveal(".skill-box", { delay: 80 });
-sr.reveal(".skill-tags li", { interval: 40 });
-sr.reveal(".exp-item", { interval: 100 });
-sr.reveal(".edu-item", { interval: 80 });
-sr.reveal(".services-info", { origin: "left" });
-sr.reveal(".srv-card", { interval: 80 });
-sr.reveal(".prt-card", { interval: 60 });
-sr.reveal(".testimonials-title", { delay: 80 });
-sr.reveal(".contact-info", { origin: "left" });
-sr.reveal(".contact-form", { origin: "right", delay: 80 });
-sr.reveal(".sub-box", { delay: 80 });
 
 function hasReached(el) {
   if (!el) return false;
@@ -226,21 +242,21 @@ const swiper = new Swiper(".swiper", {
 });
 
 function activeLink() {
-  let sections = document.querySelectorAll("section[id]");
-  let passedSections = Array.from(sections)
-    .map((sct, i) => ({
-      y: sct.getBoundingClientRect().top - header.offsetHeight - 40,
-      id: i,
-    }))
-    .filter((sct) => sct.y <= 0);
+  const sections = document.querySelectorAll("section[id]");
+  const offset = header.offsetHeight + 40;
+  let currentId = null;
 
-  if (!passedSections.length) return;
+  sections.forEach((section) => {
+    if (section.getBoundingClientRect().top - offset <= 0) {
+      currentId = section.id;
+    }
+  });
 
-  let currentSectionID = passedSections.at(-1).id;
-  links.forEach((l) => l.classList.remove("active"));
-  if (links[currentSectionID]) {
-    links[currentSectionID].classList.add("active");
-  }
+  links.forEach((link) => {
+    const href = link.getAttribute("href") || "";
+    const id = href.startsWith("#") ? href.slice(1) : "";
+    link.classList.toggle("active", Boolean(currentId) && id === currentId);
+  });
 }
 
 activeLink();
