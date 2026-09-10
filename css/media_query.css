@@ -55,6 +55,10 @@ footer,
     gap: 1rem;
   }
 
+  .core-skills {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .skill {
     max-width: none;
   }
@@ -387,7 +391,11 @@ footer,
   .skills-wrap {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem 0.75rem;
-    margin-top: 1.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .core-skills {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .sk-progress {

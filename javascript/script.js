@@ -70,17 +70,24 @@ document.querySelector(".overlay")?.addEventListener("click", () => {
 
 var currentIndex = 0;
 const imageCount = images.length;
+let lastFocusedEl = null;
+
+function changeImage(index) {
+  images.forEach((img) => img.classList.remove("showImage"));
+  images[index].classList.add("showImage");
+}
 
 function openPortfolioModal(index) {
   currentIndex = index;
   changeImage(currentIndex);
   prt_section.classList.add("open");
   document.body.classList.add("stopScrolling");
-  // Prevent the opening click/tap from immediately hitting the backdrop
+  lastFocusedEl = document.activeElement;
   modal_overlay.style.pointerEvents = "none";
   setTimeout(() => {
     if (prt_section.classList.contains("open")) {
       modal_overlay.style.pointerEvents = "";
+      next_btn?.focus();
     }
   }, 350);
 }
@@ -89,6 +96,9 @@ function closePortfolioModal() {
   prt_section.classList.remove("open");
   document.body.classList.remove("stopScrolling");
   modal_overlay.style.pointerEvents = "";
+  if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
+    lastFocusedEl.focus();
+  }
 }
 
 zoom_icons.forEach((icn, i) =>
@@ -105,8 +115,17 @@ modal_overlay.addEventListener("click", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && prt_section.classList.contains("open")) {
-    closePortfolioModal();
+  if (!prt_section.classList.contains("open")) return;
+  if (e.key === "Escape") closePortfolioModal();
+  if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    currentIndex = currentIndex === 0 ? imageCount - 1 : currentIndex - 1;
+    changeImage(currentIndex);
+  }
+  if (e.key === "ArrowRight") {
+    e.preventDefault();
+    currentIndex = currentIndex === imageCount - 1 ? 0 : currentIndex + 1;
+    changeImage(currentIndex);
   }
 });
 
@@ -122,23 +141,93 @@ next_btn.addEventListener("click", (e) => {
   changeImage(currentIndex);
 });
 
-function changeImage(index) {
-  images.forEach((img) => img.classList.remove("showImage"));
-  images[index].classList.add("showImage");
-}
-
-window.addEventListener("scroll", () => {
-  if (!skillsPlayed) skillsCounter();
-  if (!mlPlayed) mlCounter();
-  activeLink();
-});
-
 function stickyNavbar() {
   header.classList.toggle("scrolled", window.scrollY > 24);
 }
 
 stickyNavbar();
 window.addEventListener("scroll", stickyNavbar, { passive: true });
+
+function hasReached(el) {
+  if (!el) return false;
+  let topPosition = el.getBoundingClientRect().top;
+  return window.innerHeight >= topPosition + el.offsetHeight * 0.35;
+}
+
+function updateCount(num, maxNum) {
+  let currentNum = +num.innerText;
+  if (currentNum < maxNum) {
+    num.innerText = currentNum + 1;
+    setTimeout(() => {
+      updateCount(num, maxNum);
+    }, 12);
+  }
+}
+
+var mlPlayed = false;
+
+function mlCounter() {
+  if (!hasReached(ml_section)) return;
+  mlPlayed = true;
+  ml_counters.forEach((ctr) => {
+    let target = +ctr.dataset.target;
+    setTimeout(() => {
+      updateCount(ctr, target);
+    }, 400);
+  });
+}
+
+var skillsPlayed = false;
+
+function skillsCounter() {
+  if (!hasReached(first_skill)) return;
+  skillsPlayed = true;
+
+  sk_counters.forEach((counter, i) => {
+    let target = +counter.dataset.target;
+    let strokeValue = 427 - 427 * (target / 100);
+    if (progress_bars[i]) {
+      progress_bars[i].style.setProperty("--target", strokeValue);
+    }
+    setTimeout(() => {
+      updateCount(counter, target);
+    }, 400);
+  });
+
+  progress_bars.forEach(
+    (p) => (p.style.animation = "progress 1.6s ease-out forwards"),
+  );
+}
+
+function activeLink() {
+  const sections = document.querySelectorAll("section[id]");
+  const offset = header.offsetHeight + 40;
+  let currentId = null;
+
+  sections.forEach((section) => {
+    if (section.getBoundingClientRect().top - offset <= 0) {
+      currentId = section.id;
+    }
+  });
+
+  links.forEach((link) => {
+    const href = link.getAttribute("href") || "";
+    const id = href.startsWith("#") ? href.slice(1) : "";
+    link.classList.toggle("active", Boolean(currentId) && id === currentId);
+  });
+}
+
+activeLink();
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!skillsPlayed) skillsCounter();
+    if (!mlPlayed) mlCounter();
+    activeLink();
+  },
+  { passive: true },
+);
 
 let sr = null;
 
@@ -160,6 +249,7 @@ if (window.innerWidth > 768) {
   sr.reveal(".about-card", { interval: 80 });
   sr.reveal(".about-info", { delay: 100 });
   sr.reveal(".skill-box", { delay: 80 });
+  sr.reveal(".skills-wrap .skill", { interval: 60 });
   sr.reveal(".skill-tags li", { interval: 40 });
   sr.reveal(".exp-item", { interval: 100 });
   sr.reveal(".edu-item", { interval: 80 });
@@ -178,7 +268,6 @@ if (window.innerWidth > 768) {
   document.querySelector(".showcase-image")?.classList.add("is-floating");
 }
 
-/* Infinite tools marquee: clone list for seamless loop */
 const toolsTrack = document.querySelector(".tools-track");
 const toolsList = document.querySelector(".tools-list");
 if (toolsTrack && toolsList) {
@@ -187,7 +276,6 @@ if (toolsTrack && toolsList) {
   toolsTrack.appendChild(clone);
 }
 
-/* FAQ: keep only one item open at a time */
 document.querySelectorAll(".faq-item").forEach((item) => {
   item.addEventListener("toggle", () => {
     if (!item.open) return;
@@ -196,55 +284,6 @@ document.querySelectorAll(".faq-item").forEach((item) => {
     });
   });
 });
-
-function hasReached(el) {
-  if (!el) return false;
-  let topPosition = el.getBoundingClientRect().top;
-  return window.innerHeight >= topPosition + el.offsetHeight * 0.35;
-}
-
-function updateCount(num, maxNum) {
-  let currentNum = +num.innerText;
-  if (currentNum < maxNum) {
-    num.innerText = currentNum + 1;
-    setTimeout(() => {
-      updateCount(num, maxNum);
-    }, 12);
-  }
-}
-
-var skillsPlayed = false;
-
-function skillsCounter() {
-  if (!hasReached(first_skill)) return;
-  skillsPlayed = true;
-
-  sk_counters.forEach((counter, i) => {
-    let target = +counter.dataset.target;
-    let strokeValue = 427 - 427 * (target / 100);
-    progress_bars[i].style.setProperty("--target", strokeValue);
-    setTimeout(() => {
-      updateCount(counter, target);
-    }, 400);
-  });
-
-  progress_bars.forEach(
-    (p) => (p.style.animation = "progress 2s ease-in-out forwards"),
-  );
-}
-
-var mlPlayed = false;
-
-function mlCounter() {
-  if (!hasReached(ml_section)) return;
-  mlPlayed = true;
-  ml_counters.forEach((ctr) => {
-    let target = +ctr.dataset.target;
-    setTimeout(() => {
-      updateCount(ctr, target);
-    }, 400);
-  });
-}
 
 let mixer = mixitup(".portfolio-gallery", {
   selectors: {
@@ -269,27 +308,9 @@ const swiper = new Swiper(".swiper", {
   watchOverflow: true,
   observer: true,
   observeParents: true,
+  preventClicks: true,
+  preventClicksPropagation: true,
 });
-
-function activeLink() {
-  const sections = document.querySelectorAll("section[id]");
-  const offset = header.offsetHeight + 40;
-  let currentId = null;
-
-  sections.forEach((section) => {
-    if (section.getBoundingClientRect().top - offset <= 0) {
-      currentId = section.id;
-    }
-  });
-
-  links.forEach((link) => {
-    const href = link.getAttribute("href") || "";
-    const id = href.startsWith("#") ? href.slice(1) : "";
-    link.classList.toggle("active", Boolean(currentId) && id === currentId);
-  });
-}
-
-activeLink();
 
 const newsletterForm = document.querySelector(".newsletter-form");
 if (newsletterForm) {
