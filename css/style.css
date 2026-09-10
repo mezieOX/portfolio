@@ -116,10 +116,17 @@ body.dark .toggle-btn .icon-sun {
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 0.75rem);
+  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 body {
   overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
+  width: 100%;
   background-color: var(--surface);
   color: var(--ink-soft);
   font-family: var(--font-body);
@@ -1707,6 +1714,9 @@ footer .text {
 
 .tools-marquee {
   position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
   mask-image: linear-gradient(
     90deg,
     transparent,
