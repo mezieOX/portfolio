@@ -58,6 +58,62 @@ body.dark {
   border: 0;
 }
 
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 1000;
+  padding: 0.65rem 1rem;
+  border-radius: 0.65rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: top 0.2s var(--ease);
+}
+
+.skip-link:focus {
+  top: 1rem;
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  display: block;
+  flex-shrink: 0;
+}
+
+.toggle-btn .icon-sun {
+  display: none;
+}
+
+body.dark .toggle-btn .icon-moon {
+  display: none;
+}
+
+body.dark .toggle-btn .icon-sun {
+  display: block;
+}
+
+.prt-icon .icon,
+.social-link .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.navigation .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.mail .icon {
+  width: 1em;
+  height: 1em;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -683,14 +739,6 @@ body.open .hamburger .bar:last-child {
   justify-items: center;
 }
 
-.skills-note {
-  margin: 1.35rem 0 0;
-  font-size: 0.8rem;
-  color: var(--muted);
-  max-width: 36rem;
-  line-height: 1.45;
-}
-
 .core-skills {
   display: none;
 }
@@ -710,6 +758,17 @@ body.open .hamburger .bar:last-child {
   position: relative;
   display: grid;
   place-items: center;
+  border-radius: 50%;
+  transition:
+    transform 0.45s var(--ease),
+    filter 0.45s var(--ease);
+}
+
+.skill:hover .sk-progress {
+  transform: translateY(-4px) scale(1.04);
+  filter: drop-shadow(
+    0 10px 18px color-mix(in srgb, var(--accent) 28%, transparent)
+  );
 }
 
 .sk-progress svg {
@@ -722,50 +781,86 @@ body.open .hamburger .bar:last-child {
 
 .sk-progress svg circle {
   fill: none;
-  stroke-width: 8;
   stroke-linecap: round;
 }
 
 .sk-progress svg .sk-track {
   stroke: var(--surface-muted);
+  stroke-width: 8;
 }
 
 .sk-progress svg .sk-value {
   stroke: var(--accent);
+  stroke-width: 8;
   stroke-dasharray: 427;
   stroke-dashoffset: 427;
+  transition: stroke-dashoffset 1.35s var(--ease);
+  transition-delay: calc(var(--i, 0) * 90ms);
 }
 
-@keyframes progress {
+.skills-wrap.is-in .sk-value {
+  stroke-dashoffset: 0;
+}
+
+.sk-progress svg .sk-orbit {
+  stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+  stroke-width: 1.5;
+  stroke-dasharray: 12 28;
+  stroke-dashoffset: 0;
+  opacity: 0;
+  transform-origin: 75px 75px;
+  transition: opacity 0.5s var(--ease);
+  transition-delay: calc(0.7s + var(--i, 0) * 90ms);
+}
+
+.skills-wrap.is-in .sk-orbit {
+  opacity: 1;
+  animation: skill-orbit 10s linear infinite;
+  animation-delay: calc(0.9s + var(--i, 0) * 90ms);
+}
+
+.skill:hover .sk-orbit {
+  animation-duration: 4.5s;
+  stroke: var(--accent);
+}
+
+@keyframes skill-orbit {
   to {
-    stroke-dashoffset: var(--target);
+    stroke-dashoffset: -120;
   }
 }
 
-.counter {
+.sk-mark {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  display: block;
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
-  text-align: center;
+  transform: translate(-50%, -50%) scale(0.86);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--ink);
-  font-weight: 600;
-  font-size: 0.95rem;
   line-height: 1;
+  opacity: 0;
+  transition:
+    opacity 0.45s var(--ease),
+    transform 0.45s var(--ease),
+    color 0.3s var(--ease);
+  transition-delay: calc(0.35s + var(--i, 0) * 90ms);
   pointer-events: none;
-  font-variant-numeric: tabular-nums;
 }
 
-.counter span {
-  font-family: var(--font-display);
-  font-size: 1.55rem;
-  font-weight: 700;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+.skills-wrap.is-in .sk-mark {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.skill:hover .sk-mark {
+  color: var(--accent-dark);
+}
+
+body.dark .skill:hover .sk-mark {
+  color: var(--accent);
 }
 
 .sk-title {
@@ -773,6 +868,31 @@ body.open .hamburger .bar:last-child {
   font-weight: 600;
   color: var(--ink);
   font-size: 0.88rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-progress svg .sk-value {
+    transition: none;
+    stroke-dashoffset: 0;
+  }
+
+  .sk-mark {
+    transition: none;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .skills-wrap .sk-orbit,
+  .skills-wrap.is-in .sk-orbit,
+  .skill:hover .sk-orbit {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  .skill:hover .sk-progress {
+    transform: none;
+    filter: none;
+  }
 }
 
 /* —— Skills tags —— */
@@ -1158,6 +1278,14 @@ a.edu-item:hover p {
   color: var(--muted);
 }
 
+.prt-outcome {
+  margin: 0.25rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: var(--ink);
+  opacity: 0.82;
+}
+
 .prt-overlay {
   position: absolute;
   inset: 0;
@@ -1171,7 +1299,8 @@ a.edu-item:hover p {
   transition: opacity 0.3s var(--ease);
 }
 
-.prt-image:hover .prt-overlay {
+.prt-image:hover .prt-overlay,
+.prt-image:focus-within .prt-overlay {
   opacity: 1;
 }
 
@@ -1193,7 +1322,8 @@ a.edu-item:hover p {
     background 0.25s var(--ease);
 }
 
-.prt-image:hover .prt-icon {
+.prt-image:hover .prt-icon,
+.prt-image:focus-within .prt-icon {
   transform: translateY(0);
 }
 
@@ -1624,7 +1754,9 @@ footer .text {
   border: 1px solid var(--line);
   border-radius: 1.15rem;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  transition:
+    border-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
 }
 
 .tool-card:hover {
@@ -1726,7 +1858,9 @@ body.dark .tool-icon {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
-  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  transition:
+    border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
 }
 
 .faq-item[open] {
@@ -1770,7 +1904,9 @@ body.dark .tool-icon {
   inset: 50% auto auto 50%;
   background: var(--ink);
   border-radius: 1px;
-  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+  transition:
+    transform 0.25s var(--ease),
+    opacity 0.25s var(--ease);
 }
 
 .faq-toggle::before {
@@ -1803,4 +1939,3 @@ body.dark .tool-icon {
 }
 
 /* Responsive rules live in media_query.css */
-

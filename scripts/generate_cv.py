@@ -167,37 +167,27 @@ def main():
             "company": "August Techie / Kindrel",
             "place": "Remote - India - Full-time",
             "bullets": [
-                "Leading React Native delivery for Kindrel - family tree, community, chat, events, and shared savings on iOS and Android.",
-                "Shipped App Store and Google Play releases using React Native CLI and Expo, with Axios, TanStack Query, and Redux Toolkit.",
+                "Leading React Native delivery for Kindrel - family tree, community spaces, chat, events, and shared savings on iOS and Android.",
+                "Shipped App Store and Google Play releases using React Native CLI and Expo, with Axios, GraphQL, TanStack Query, and Redux Toolkit.",
                 "Improved release quality through React DevTools / Chrome DevTools debugging and tighter design-to-dev handoff.",
             ],
         },
         {
-            "role": "Senior Front-End / Mobile Engineer",
+            "role": "Senior Front-End Engineer",
             "dates": "2025 - 2026",
             "company": "BrandDrive",
             "place": "Remote - Nigeria - Full-time",
             "bullets": [
-                "Built React, React Native, and Electron surfaces for BrandDrive's SME OS - invoicing, POS, inventory, and payments across Africa.",
-                "Reduced form and data-fetch friction with Formik, Axios, and TanStack Query; shared state via React Context and Redux Toolkit.",
-                "Partnered with product and design to ship production features with fewer regressions through systematic debugging.",
-            ],
-        },
-        {
-            "role": "Front-End Engineer",
-            "dates": "2024",
-            "company": "Osmaxin Developers",
-            "place": "Remote - Nigeria - Contract",
-            "bullets": [
-                "Delivered the Oltem Logistics marketing site and client-facing logistics UI for work orders and tracking.",
-                "Built responsive React flows with Axios and Formik, then polished to production with the Osmaxin team.",
+                "Part of the team building BrandDrive's SME operating system across Africa with Next.js - powering invoicing, POS, inventory, and payments workflows.",
+                "Consumed REST APIs for product data and workflows, and built form-heavy flows with Formik for reliable user input.",
+                "Partnered with product and design on production delivery and debugging across the web experience.",
             ],
         },
         {
             "role": "Junior Front-End / Mobile Engineer",
             "dates": "2023 - 2025",
             "company": "Oneway",
-            "place": "Remote - Nigeria - Full-time (concurrent)",
+            "place": "Remote - Nigeria - Full-time (concurrent with other roles)",
             "bullets": [
                 "Shipped React Native (Expo / CLI) and web UI for Oneway's AI-assisted inventory, POS, and self-checkout retail suite.",
                 "Owned storefront, inventory, and payments flows with Axios, TanStack Query, Formik, and React Context.",
@@ -210,8 +200,8 @@ def main():
             "company": "IBX Exchange",
             "place": "Remote - Nigeria - Part-time / contract (concurrent)",
             "bullets": [
-                "Built responsive trading and wallet interfaces in React with Axios and React Context for the IBX platform.",
-                "Improved form UX with Formik and raised front-end reliability through debugging and performance cleanup.",
+                "Part of the team building the IBX website plus web and mobile trading and wallet apps in React and Bootstrap, consuming REST APIs with React Context across the platform.",
+                "Improved form UX with Formik and raised front-end reliability through ongoing debugging and performance cleanup.",
             ],
         },
         {
@@ -220,8 +210,18 @@ def main():
             "company": "Ventlio",
             "place": "Hybrid / Remote - Nigeria - Internship",
             "bullets": [
-                "Built early Ventlio web and mobile UI in React, establishing reusable Formik and Axios patterns.",
-                "Grew into production ownership - resolving issues, refining UX, and keeping the front-end maintainable.",
+                "Built early Ventlio web and mobile UI in React, establishing reusable patterns for forms (Formik) and API calls (Axios).",
+                "Grew into production ownership - resolving issues, refining UX, and keeping the front-end codebase maintainable.",
+            ],
+        },
+        {
+            "role": "Front-End Engineering Intern",
+            "dates": "2023 - 2023",
+            "company": "Osmaxin Developers",
+            "place": "Remote - Nigeria - Internship",
+            "bullets": [
+                "Delivered the Oltem Logistics site and client-facing logistics UI in Next.js for work orders and tracking.",
+                "Consumed REST APIs for logistics workflows and built Formik forms, then polished production-ready Next.js UI with the Osmaxin team.",
             ],
         },
     ]
@@ -239,11 +239,11 @@ def main():
         ),
         (
             "State & Data: ",
-            "Redux Toolkit, React Context, TanStack Query, Axios, Formik, Yup, REST, Firebase, Supabase",
+            "Redux Toolkit, React Context, TanStack Query, Axios, Formik, Yup, REST, GraphQL, Firebase, Supabase",
         ),
         (
             "UI & Tooling: ",
-            "Tailwind CSS, Chakra UI, Git, GitHub Actions, CI/CD",
+            "Tailwind CSS, Bootstrap, Chakra UI, Git, GitHub Actions, CI/CD",
         ),
         (
             "Shipping & Debug: ",
@@ -270,8 +270,8 @@ def main():
 
     y = section_title(c, "EDUCATION", y)
     education = [
-        "B.Sc. Computer Science - Nnamdi Azikiwe University, Awka (2022 - 2025, studied while working)",
-        "Osmaxin Developers - Web & mobile training; later client engagement (2021 - 2023)",
+        "B.Sc. Computer Science - Nnamdi Azikiwe University, Awka (2021 - 2025, studied while working)",
+        "Osmaxin Developers - Web & mobile internship / training (2021 - 2023)",
         "HTML5 / CSS3 / JavaScript - ApTech Computer Education (2020 - 2022)",
         "Udemy - React, Next.js, and Vite | freeCodeCamp - Hands-on projects",
         "Clever Programmer - React | CodeWithMosh - React Native",

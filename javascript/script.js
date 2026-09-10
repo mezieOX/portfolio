@@ -1,7 +1,6 @@
 const header = document.querySelector("header");
 const first_skill = document.querySelector(".skill:first-child");
-const sk_counters = document.querySelectorAll(".counter span");
-const progress_bars = document.querySelectorAll(".skills svg circle.sk-value");
+const skills_wrap = document.querySelector(".skills-wrap");
 const ml_section = document.querySelector(".milestones");
 const ml_counters = document.querySelectorAll(".number span");
 const prt_section = document.querySelector(".portfolio");
@@ -36,14 +35,11 @@ var firstTheme = localStorage.getItem("dark");
 changeTheme(+firstTheme);
 
 function changeTheme(isDark) {
-  const icon = toggle_btn.querySelector("i") || toggle_btn;
   if (isDark) {
     document.body.classList.add("dark");
-    icon.classList.replace("fa-moon-o", "fa-sun-o");
     localStorage.setItem("dark", 1);
   } else {
     document.body.classList.remove("dark");
-    icon.classList.replace("fa-sun-o", "fa-moon-o");
     localStorage.setItem("dark", 0);
   }
 }
@@ -71,6 +67,27 @@ document.querySelector(".overlay")?.addEventListener("click", () => {
 var currentIndex = 0;
 const imageCount = images.length;
 let lastFocusedEl = null;
+const portfolioModal = document.querySelector(".portfolio .modal");
+
+function getModalFocusable() {
+  if (!portfolioModal) return [];
+  return Array.from(
+    portfolioModal.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+}
+
+function setModalOpenState(isOpen) {
+  if (!portfolioModal) return;
+  portfolioModal.setAttribute("aria-hidden", String(!isOpen));
+  portfolioModal.setAttribute("aria-modal", String(isOpen));
+  if (isOpen) {
+    portfolioModal.removeAttribute("inert");
+  } else {
+    portfolioModal.setAttribute("inert", "");
+  }
+}
 
 function changeImage(index) {
   images.forEach((img) => img.classList.remove("showImage"));
@@ -83,6 +100,7 @@ function openPortfolioModal(index) {
   prt_section.classList.add("open");
   document.body.classList.add("stopScrolling");
   lastFocusedEl = document.activeElement;
+  setModalOpenState(true);
   modal_overlay.style.pointerEvents = "none";
   setTimeout(() => {
     if (prt_section.classList.contains("open")) {
@@ -96,10 +114,13 @@ function closePortfolioModal() {
   prt_section.classList.remove("open");
   document.body.classList.remove("stopScrolling");
   modal_overlay.style.pointerEvents = "";
+  setModalOpenState(false);
   if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
     lastFocusedEl.focus();
   }
 }
+
+setModalOpenState(false);
 
 zoom_icons.forEach((icn, i) =>
   icn.addEventListener("click", (e) => {
@@ -116,7 +137,11 @@ modal_overlay.addEventListener("click", (e) => {
 
 document.addEventListener("keydown", (e) => {
   if (!prt_section.classList.contains("open")) return;
-  if (e.key === "Escape") closePortfolioModal();
+  if (e.key === "Escape") {
+    e.preventDefault();
+    closePortfolioModal();
+    return;
+  }
   if (e.key === "ArrowLeft") {
     e.preventDefault();
     currentIndex = currentIndex === 0 ? imageCount - 1 : currentIndex - 1;
@@ -126,6 +151,25 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     currentIndex = currentIndex === imageCount - 1 ? 0 : currentIndex + 1;
     changeImage(currentIndex);
+  }
+  if (e.key === "Tab") {
+    const focusable = getModalFocusable();
+    if (!focusable.length) {
+      e.preventDefault();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    } else if (!portfolioModal.contains(document.activeElement)) {
+      e.preventDefault();
+      first.focus();
+    }
   }
 });
 
@@ -179,24 +223,11 @@ function mlCounter() {
 
 var skillsPlayed = false;
 
-function skillsCounter() {
+function skillsReveal() {
+  if (!first_skill || !skills_wrap) return;
   if (!hasReached(first_skill)) return;
   skillsPlayed = true;
-
-  sk_counters.forEach((counter, i) => {
-    let target = +counter.dataset.target;
-    let strokeValue = 427 - 427 * (target / 100);
-    if (progress_bars[i]) {
-      progress_bars[i].style.setProperty("--target", strokeValue);
-    }
-    setTimeout(() => {
-      updateCount(counter, target);
-    }, 400);
-  });
-
-  progress_bars.forEach(
-    (p) => (p.style.animation = "progress 1.6s ease-out forwards"),
-  );
+  skills_wrap.classList.add("is-in");
 }
 
 function activeLink() {
@@ -222,7 +253,7 @@ activeLink();
 window.addEventListener(
   "scroll",
   () => {
-    if (!skillsPlayed) skillsCounter();
+    if (!skillsPlayed) skillsReveal();
     if (!mlPlayed) mlCounter();
     activeLink();
   },
@@ -231,7 +262,7 @@ window.addEventListener(
 
 let sr = null;
 
-if (window.innerWidth > 768) {
+if (window.innerWidth > 768 && typeof ScrollReveal === "function") {
   sr = ScrollReveal({
     duration: 900,
     distance: "32px",
