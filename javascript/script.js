@@ -71,26 +71,53 @@ document.querySelector(".overlay")?.addEventListener("click", () => {
 var currentIndex = 0;
 const imageCount = images.length;
 
+function openPortfolioModal(index) {
+  currentIndex = index;
+  changeImage(currentIndex);
+  prt_section.classList.add("open");
+  document.body.classList.add("stopScrolling");
+  // Prevent the opening click/tap from immediately hitting the backdrop
+  modal_overlay.style.pointerEvents = "none";
+  setTimeout(() => {
+    if (prt_section.classList.contains("open")) {
+      modal_overlay.style.pointerEvents = "";
+    }
+  }, 350);
+}
+
+function closePortfolioModal() {
+  prt_section.classList.remove("open");
+  document.body.classList.remove("stopScrolling");
+  modal_overlay.style.pointerEvents = "";
+}
+
 zoom_icons.forEach((icn, i) =>
-  icn.addEventListener("click", () => {
-    prt_section.classList.add("open");
-    document.body.classList.add("stopScrolling");
-    currentIndex = i;
-    changeImage(currentIndex);
+  icn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openPortfolioModal(i);
   }),
 );
 
-modal_overlay.addEventListener("click", () => {
-  prt_section.classList.remove("open");
-  document.body.classList.remove("stopScrolling");
+modal_overlay.addEventListener("click", (e) => {
+  e.stopPropagation();
+  closePortfolioModal();
 });
 
-prev_btn.addEventListener("click", () => {
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && prt_section.classList.contains("open")) {
+    closePortfolioModal();
+  }
+});
+
+prev_btn.addEventListener("click", (e) => {
+  e.stopPropagation();
   currentIndex = currentIndex === 0 ? imageCount - 1 : currentIndex - 1;
   changeImage(currentIndex);
 });
 
-next_btn.addEventListener("click", () => {
+next_btn.addEventListener("click", (e) => {
+  e.stopPropagation();
   currentIndex = currentIndex === imageCount - 1 ? 0 : currentIndex + 1;
   changeImage(currentIndex);
 });

@@ -1177,8 +1177,11 @@ body.stopScrolling {
 .modal-overlay {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: rgba(11, 19, 36, 0.88);
   opacity: 0;
+  cursor: zoom-out;
+  pointer-events: none;
   transition: opacity 0.3s var(--ease);
 }
 
@@ -1186,6 +1189,7 @@ body.stopScrolling {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 2;
   transform: translate(-50%, calc(-50% + 40px));
   width: min(90vw, 900px);
   display: grid;
@@ -1193,7 +1197,13 @@ body.stopScrolling {
   align-items: center;
   gap: 0.5rem;
   opacity: 0;
+  pointer-events: none;
   transition: 0.35s var(--ease);
+}
+
+.portfolio.open .slider-wrap .navigation,
+.portfolio.open .slider-wrap .images {
+  pointer-events: auto;
 }
 
 .slider-wrap img {
@@ -1221,6 +1231,7 @@ body.stopScrolling {
 
 .portfolio.open .modal-overlay {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .portfolio.open .slider-wrap {
