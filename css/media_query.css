@@ -29,16 +29,62 @@ header,
 footer,
 .container {
   max-width: 100%;
+  min-width: 0;
+}
+
+main {
+  width: 100%;
+  overflow-x: clip;
 }
 
 .heading,
 .text,
 .sub-heading,
 .exp-role,
+.exp-company,
+.exp-place,
+.exp-points li,
+.edu-item,
+.edu-item h4,
+.edu-item p,
+.skill-tags li,
 .mail,
-.prt-desc h3 {
+.prt-desc h3,
+.prt-meta,
+.prt-outcome,
+.srv-card h3,
+.srv-card .text,
+.faq-item summary {
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.sub-heading {
+  max-width: 100%;
+}
+
+.skill-tags {
+  max-width: 100%;
+}
+
+/* —— ≤ 1200px —— */
+@media (max-width: 1200px) {
+  .exp-item {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr);
+    gap: 1.25rem 1.5rem;
+  }
+
+  .contact .container,
+  .testimonials .container {
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .portfolio-gallery {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, 16.5rem), 1fr)
+    );
+  }
 }
 
 /* —— ≤ 1000px —— */
@@ -50,6 +96,43 @@ footer,
 
   .showcase-info .heading {
     font-size: clamp(2.1rem, 5vw, 3.1rem);
+    max-width: 100%;
+  }
+
+  .about .container {
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  .about-card:nth-child(2),
+  .about-card:nth-child(4) {
+    transform: none;
+  }
+
+  .exp-item {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .exp-meta {
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .education-grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(100%, 16rem), 1fr)
+    );
+  }
+
+  .portfolio-header {
+    align-items: flex-start;
+  }
+
+  .portfolio-btns {
+    flex: 1 1 100%;
+    max-width: 100%;
   }
 
   .skills-wrap {
@@ -298,9 +381,18 @@ footer,
   }
 
   .showcase-info .sub-heading {
-    font-size: 0.7rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.55rem;
+    font-size: clamp(0.62rem, 2.8vw, 0.72rem);
     letter-spacing: 0.05em;
+    line-height: 1.45;
     max-width: 100%;
+  }
+
+  .showcase-info .sub-heading::before {
+    flex-shrink: 0;
   }
 
   .showcase-image {
@@ -462,7 +554,26 @@ footer,
   }
 
   .education-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+  }
+
+  .edu-item {
+    min-width: 0;
+    padding: 1.1rem 1.15rem;
+  }
+
+  .experience-header,
+  .daily-tools-header,
+  .faq-header,
+  .services-info,
+  .portfolio-title {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .box-desc .text {
+    max-width: 100%;
   }
 
   .services-grid {
@@ -501,7 +612,10 @@ footer,
   .portfolio-btns {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(100%, 7.5rem), 1fr)
+    );
     gap: 0.5rem;
   }
 
@@ -797,5 +911,81 @@ footer,
   .sk-progress {
     width: 4.85rem;
     height: 4.85rem;
+  }
+
+  .showcase-info .sub-heading {
+    font-size: 0.6rem;
+  }
+
+  .portfolio-btns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .milestones {
+    grid-template-columns: 1fr;
+    text-align: left;
+    gap: 0.75rem;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— ≤ 320px —— */
+@media (max-width: 320px) {
+  .container,
+  nav.container {
+    padding-inline: max(0.85rem, env(safe-area-inset-left))
+      max(0.85rem, env(safe-area-inset-right));
+  }
+
+  .btn {
+    min-width: unset;
+    padding-inline: 1.15rem;
+  }
+
+  .skill-tags li {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.55rem;
+  }
+}
+
+/* —— Short viewports (landscape phones / small height) —— */
+@media (max-height: 32rem) and (orientation: landscape) {
+  .showcase-area {
+    min-height: unset;
+    padding-block: 1.25rem;
+  }
+
+  .showcase-area .container {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .showcase-image {
+    max-width: min(42vw, 14rem);
+    aspect-ratio: 1;
+  }
+
+  body.open .links {
+    max-height: calc(100dvh - var(--header-h));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* —— Large desktops —— */
+@media (min-width: 90rem) {
+  .container {
+    padding-inline: clamp(2rem, 4vw, 3rem);
+  }
+
+  .portfolio-gallery {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, 18.5rem), 1fr)
+    );
   }
 }

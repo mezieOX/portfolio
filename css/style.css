@@ -548,7 +548,7 @@ body.open .hamburger .bar:last-child {
 
 .showcase-info .heading {
   font-size: clamp(2.75rem, 6vw, 4.25rem);
-  max-width: 12ch;
+  max-width: min(18ch, 100%);
 }
 
 .showcase-info .text {
@@ -939,10 +939,11 @@ body.dark .skill:hover .sk-mark {
 
 .exp-item {
   display: grid;
-  grid-template-columns: minmax(12rem, 0.85fr) 1.4fr;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
   gap: 1.5rem 2rem;
   padding: 1.5rem 0;
   border-top: 1px solid var(--line);
+  min-width: 0;
 }
 
 .exp-item:last-of-type {
@@ -1026,7 +1027,10 @@ body.dark .skill:hover .sk-mark {
 
 .education-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 17.5rem), 1fr)
+  );
   gap: 1rem;
   margin-top: 1rem;
 }
@@ -1701,6 +1705,9 @@ footer .text {
 .daily-tools {
   padding-block: var(--section-padding);
   overflow: hidden;
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
 }
 
 .daily-tools-header {
